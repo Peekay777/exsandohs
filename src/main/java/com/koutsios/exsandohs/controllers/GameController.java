@@ -5,7 +5,6 @@ import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.service.GameService;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

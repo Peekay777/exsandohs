@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
+import com.koutsios.exsandohs.exception.PlayerTypeResolverException;
 import java.io.IOException;
 
 public class PlayerTypeResolver extends TypeIdResolverBase {
@@ -15,7 +16,7 @@ public class PlayerTypeResolver extends TypeIdResolverBase {
 
   @Override
   public String idFromValueAndType(Object value, Class<?> suggestedType) {
-    throw new RuntimeException("required for serialization only");
+    throw new PlayerTypeResolverException("required for serialization only");
   }
 
   @Override
