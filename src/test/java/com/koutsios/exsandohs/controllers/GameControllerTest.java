@@ -1,11 +1,13 @@
 package com.koutsios.exsandohs.controllers;
 
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,12 +76,12 @@ public class GameControllerTest {
         .playerEx(ex)
         .playerOh(oh)
         .build();
-    Game expected = Game.builder().build();
+    Game game = Game.builder().build();
 
     RequestBuilder request = post("/game")
         .contentType(APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(newGameDto));
-    when(gameService.createGame(any(NewGameDto.class))).thenReturn(expected);
+    when(gameService.createGame(any(NewGameDto.class))).thenReturn(game);
 
     MvcResult mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
@@ -115,10 +117,10 @@ public class GameControllerTest {
   public void getGame_giveAnExistingGameId_whenGettingGame_thenReturnGame() throws Exception {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
-    Game expected = Game.builder()
+    Game game = Game.builder()
         .id(gameId)
         .build();
-    when(gameService.getGame(anyString())).thenReturn(expected);
+    when(gameService.getGame(anyString())).thenReturn(game);
     RequestBuilder request = get("/game/" + gameId);
 
     MvcResult mvcResult = mockMvc.perform(request)
@@ -146,14 +148,42 @@ public class GameControllerTest {
   public void takeTurn_whenTakingATurn_thenReturnGame() throws Exception {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
-    String playerName = "";
-    String squareId = "";
-    RequestBuilder request = put("/game/" + gameId + playerName + squareId);
-    when(gameService.getGame(anyString())).thenThrow(GameNotFoundException.class);
+    String playerName = "TestName";
+    String squareId = "00";
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    Game game = Game.builder()
+        .id(gameId)
+        .build();
+    when(gameService.takeTurn(anyString(),anyString(),anyString()))
+        .thenReturn(game);
 
     MvcResult mvcResult = mockMvc.perform(request)
-        .andExpect(status().isNotFound())
+        .andExpect(status().isOk())
         .andReturn();
     Game actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Game.class);
+
+    assertThat(actual, instanceOf(Game.class));
+    verify(gameService, times(1)).takeTurn(anyString(), anyString(), anyString());
+  }
+
+  @Test
+  public void takeTurn_givenComputerPlayer_whenTakingATurn_thenReturnGame() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    RequestBuilder request = put("/game/{0}/{1}",gameId, playerName);
+    Game game = Game.builder()
+        .id(gameId)
+        .build();
+    when(gameService.takeTurn(anyString(),anyString(),isNull()))
+        .thenReturn(game);
+
+    MvcResult mvcResult = mockMvc.perform(request)
+        .andExpect(status().isOk())
+        .andReturn();
+    Game actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Game.class);
+
+    assertThat(actual, instanceOf(Game.class));
+    verify(gameService, times(1)).takeTurn(anyString(), anyString(), isNull());
   }
 }
