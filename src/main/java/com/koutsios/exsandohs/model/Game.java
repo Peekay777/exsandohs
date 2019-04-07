@@ -1,5 +1,6 @@
 package com.koutsios.exsandohs.model;
 
+import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.player.Player;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -20,4 +21,19 @@ public class Game {
   private Player playerEx;
   private Player playerOh;
   private Map<String, Square> board;
+
+  /**
+   * Gets the player with the required name.
+   * @return Player required
+   * @throws PlayerNotFoundException Current Player is not playing
+   */
+  public Player findCurrentPlayer() throws PlayerNotFoundException {
+
+    if (playerEx.getName().equals(currentPlayerId)) {
+      return playerEx;
+    } else if (playerOh.getName().equals(currentPlayerId)) {
+      return playerOh;
+    }
+    throw new PlayerNotFoundException(currentPlayerId);
+  }
 }

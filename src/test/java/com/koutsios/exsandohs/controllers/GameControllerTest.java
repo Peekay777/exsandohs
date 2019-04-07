@@ -23,6 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.koutsios.exsandohs.dto.NewGameDto;
 import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
+import com.koutsios.exsandohs.exception.MarkAlreadySetException;
+import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
+import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.player.ComputerPlayer;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.player.HumanPlayer;
@@ -167,7 +170,7 @@ public class GameControllerTest {
   }
 
   @Test
-  public void takeTurn_givenComputerPlayer_whenTakingATurn_thenReturnGame() throws Exception {
+  public void takeTurn_givenComputerPlayer_whenTakingTurn_thenReturnGame() throws Exception {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
     String playerName = "TestName";
@@ -185,5 +188,117 @@ public class GameControllerTest {
 
     assertThat(actual, instanceOf(Game.class));
     verify(gameService, times(1)).takeTurn(anyString(), anyString(), isNull());
+  }
+
+  @Test
+  public void takeTurn_givenGameIdDoesNotExist_whenTakingTurn_thenReturn404() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = "00";
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),anyString())).thenThrow(GameNotFoundException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenGameIdDoesNotExistForComputerPlayer_whenTakingTurn_thenReturn404() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = null;
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),isNull())).thenThrow(GameNotFoundException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenNotCurrentPlayer_whenTakingTurn_thenReturn400() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = "00";
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),anyString())).thenThrow(NotCurrentPlayerException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenNotCurrentComputerPlayer_whenTakingTurn_thenReturn400() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = null;
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),isNull())).thenThrow(NotCurrentPlayerException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenCurrentPlayerNotInGame_whenTakingTurn_thenReturn404() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = "00";
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),anyString())).thenThrow(PlayerNotFoundException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenCurrentComputerPlayerNotInGame_whenTakingTurn_thenReturn404() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = null;
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),isNull())).thenThrow(PlayerNotFoundException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenMarkAleadyAdded_whenTakingTurn_thenReturn404() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = "00";
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),anyString())).thenThrow(MarkAlreadySetException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest())
+        .andDo(MockMvcResultHandlers.print());
+  }
+
+  @Test
+  public void takeTurn_givenMarkAleadyAddedForComputerPlayer_whenTakingTurn_thenReturn404() throws Exception {
+
+    String gameId = "00000000-0000-0000-0000-000000000000";
+    String playerName = "TestName";
+    String squareId = null;
+    RequestBuilder request = put("/game/{0}/{1}/{2}",gameId, playerName, squareId);
+    when(gameService.takeTurn(anyString(),anyString(),isNull())).thenThrow(MarkAlreadySetException.class);
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest())
+        .andDo(MockMvcResultHandlers.print());
   }
 }

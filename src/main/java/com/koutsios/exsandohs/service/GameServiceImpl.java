@@ -7,7 +7,11 @@ import static java.util.UUID.randomUUID;
 import com.koutsios.exsandohs.dto.NewGameDto;
 import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
+import com.koutsios.exsandohs.exception.MarkAlreadySetException;
+import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
+import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.Game;
+import com.koutsios.exsandohs.model.player.Player;
 import com.koutsios.exsandohs.repository.GameRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +48,22 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public Game takeTurn(String gameId, String name, String squareId) {
-    return null;
+  public Game takeTurn(String gameId, String name, String squareId)
+      throws GameNotFoundException, PlayerNotFoundException, NotCurrentPlayerException,
+      MarkAlreadySetException {
+
+    Game game = gameRepository.findById(gameId)
+        .orElseThrow(() -> new GameNotFoundException(gameId));
+
+    Player player;
+    if (game.getCurrentPlayerId().equals(name)) {
+      player = game.findCurrentPlayer();
+    } else {
+      throw new NotCurrentPlayerException(name);
+    }
+
+    game.getBoard().get(squareId).setMark(player.getMark());
+    return gameRepository.save(game);
   }
 
 

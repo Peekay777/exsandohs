@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PRIVATE)
 public class GameServiceUtils {
 
+  /**
+   * Creates and empty board.
+   * @return An empty board
+   */
   public static Map<String, Square> createBoard() {
 
     Map<String, Square> board = new HashMap<>(9);
