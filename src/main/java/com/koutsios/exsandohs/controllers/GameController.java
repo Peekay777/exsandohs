@@ -38,7 +38,8 @@ public class GameController {
   public Game takeTurn(@PathVariable String gameId,
                        @PathVariable("playerName") String name,
                        @PathVariable(required = false) String squareId)
-      throws GameNotFoundException, NotCurrentPlayerException, PlayerNotFoundException, MarkAlreadySetException {
+      throws GameNotFoundException, NotCurrentPlayerException, PlayerNotFoundException,
+      MarkAlreadySetException {
 
     return gameService.takeTurn(gameId, name, squareId);
   }

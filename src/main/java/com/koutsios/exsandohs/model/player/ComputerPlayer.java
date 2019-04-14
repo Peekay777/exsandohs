@@ -3,7 +3,10 @@ package com.koutsios.exsandohs.model.player;
 import static com.koutsios.exsandohs.model.player.PlayerType.COMPUTER;
 import static com.koutsios.exsandohs.util.PlayerUtils.generateName;
 
+import com.koutsios.exsandohs.model.Game;
+import com.koutsios.exsandohs.model.TakeTurnKey;
 import java.util.Arrays;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,5 +22,10 @@ public class ComputerPlayer extends Player {
 
   public ComputerPlayer() {
     this(generateName(Arrays.asList(NAMES.split(","))));
+  }
+
+  @Override
+  public Game takeTurn(Map<TakeTurnKey, Object> params) {
+    return null;
   }
 }

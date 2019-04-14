@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = BAD_REQUEST)
 public class CreateGameException extends Exception {
 
-  public CreateGameException() {
-    super();
-  }
-
   public CreateGameException(String message) {
     super(message);
   }

@@ -5,15 +5,14 @@ import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Square {
   private String id;
   private MarkType mark;
 
-  public Square() {
-  }
+//  public Square() {
+//  }
 
   public Square(String id) {
     this.id = id;

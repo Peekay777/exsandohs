@@ -1,6 +1,8 @@
 package com.koutsios.exsandohs.service;
 
 import static com.koutsios.exsandohs.model.StateType.STARTED;
+import static com.koutsios.exsandohs.model.TakeTurnKey.GAME;
+import static com.koutsios.exsandohs.model.TakeTurnKey.SQUARE_ID;
 import static com.koutsios.exsandohs.util.GameServiceUtils.createBoard;
 import static java.util.UUID.randomUUID;
 
@@ -11,8 +13,11 @@ import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.Game;
+import com.koutsios.exsandohs.model.TakeTurnKey;
 import com.koutsios.exsandohs.model.player.Player;
 import com.koutsios.exsandohs.repository.GameRepository;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,7 +67,13 @@ public class GameServiceImpl implements GameService {
       throw new NotCurrentPlayerException(name);
     }
 
-    game.getBoard().get(squareId).setMark(player.getMark());
+    Map<TakeTurnKey, Object> takeTurnMap = new HashMap<>();
+    takeTurnMap.put(GAME, game);
+    takeTurnMap.put(SQUARE_ID, squareId);
+
+    game = player.takeTurn(takeTurnMap);
+
+
     return gameRepository.save(game);
   }
 

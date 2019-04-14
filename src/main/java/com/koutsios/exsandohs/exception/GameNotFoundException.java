@@ -10,10 +10,6 @@ public class GameNotFoundException extends Exception {
 
   private static final String MESSAGE_PATTERN = "Game Id {0} was not found";
 
-  public GameNotFoundException() {
-    super();
-  }
-
   public GameNotFoundException(String gameId) {
     super(MessageFormat.format(MESSAGE_PATTERN, gameId));
   }

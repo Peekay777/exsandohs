@@ -1,7 +1,6 @@
 package com.koutsios.exsandohs.service;
 
 import static com.koutsios.exsandohs.model.MarkType.*;
-import static com.koutsios.exsandohs.model.StateType.IN_PROGRESS;
 import static com.koutsios.exsandohs.model.StateType.STARTED;
 import static com.koutsios.exsandohs.util.GameServiceUtils.createBoard;
 import static org.hamcrest.Matchers.instanceOf;
@@ -20,9 +19,8 @@ import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
+import com.koutsios.exsandohs.model.Board;
 import com.koutsios.exsandohs.model.Game;
-import com.koutsios.exsandohs.model.MarkType;
-import com.koutsios.exsandohs.model.Square;
 import com.koutsios.exsandohs.model.player.ComputerPlayer;
 import com.koutsios.exsandohs.model.player.HumanPlayer;
 import com.koutsios.exsandohs.model.player.Player;
@@ -33,7 +31,6 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -97,7 +94,7 @@ public class GameServiceImplTest {
     assertThat(actual.getPlayerOh(), instanceOf(ComputerPlayer.class));
     assertEquals("One", actual.getCurrentPlayerId());
     assertEquals(STARTED, actual.getState());
-    assertThat(actual.getBoard(), instanceOf(Map.class));
+    assertThat(actual.getBoard().getGameBoard(), instanceOf(Map.class));
   }
 
   @Test(expected = CreateGameException.class)
@@ -163,8 +160,8 @@ public class GameServiceImplTest {
         .board(createBoard())
         .build();
 
-    Map<String, Square> board = createBoard();
-    board.get("00").setMark(X);
+    Board board = createBoard();
+    board.getSquare("00").setMark(X);
     Game expected = Game.builder()
         .id(gameId)
         .currentPlayerId(ex.getName())
@@ -179,7 +176,7 @@ public class GameServiceImplTest {
 
     Game actual = subject.takeTurn(gameId, playerName, squareId);
 
-    assertEquals(X, actual.getBoard().get("00").getMark());
+    assertEquals(X, actual.getBoard().getSquare("00").getMark());
     verify(gameRepository, times(1)).findById(anyString());
     verify(gameRepository, times(1)).save(any(Game.class));
   }
@@ -259,8 +256,8 @@ public class GameServiceImplTest {
         .name(playerName)
         .build();
     Player oh = new ComputerPlayer();
-    Map<String, Square> board = createBoard();
-    board.get("00").setMark(X);
+    Board board = createBoard();
+    board.getSquare("00").setMark(X);
     Game game = Game.builder()
         .id(gameId)
         .currentPlayerId(ex.getName())

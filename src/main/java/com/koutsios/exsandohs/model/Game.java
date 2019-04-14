@@ -2,7 +2,6 @@ package com.koutsios.exsandohs.model;
 
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.player.Player;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class Game {
   private StateType state;
   private Player playerEx;
   private Player playerOh;
-  private Map<String, Square> board;
+  private Board board;
 
   /**
    * Gets the player with the required name.
