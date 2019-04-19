@@ -1,31 +1,39 @@
 package com.koutsios.exsandohs.model.player;
 
+import static com.koutsios.exsandohs.model.TakeTurnKey.GAME;
 import static com.koutsios.exsandohs.model.player.PlayerType.COMPUTER;
-import static com.koutsios.exsandohs.util.PlayerUtils.generateName;
+import static com.koutsios.exsandohs.util.GameServiceUtils.getParam;
 
+import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.TakeTurnKey;
-import java.util.Arrays;
+import com.koutsios.exsandohs.service.RandomService;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ComputerPlayer extends Player {
 
-  private static final String NAMES = "Damon,Dick,Arturo,Dario,Weldon,Trinidad,Albert,Grant,"
-      + "Claud,Alphonse,Dannielle,Lucretia,Stephine,Carole,Theresa,Rosanne,Meri,Whitley,Renita,"
-      + "Demetra";
+  @Autowired
+  private RandomService randomService;
+
+  private static final String NAME = "Dumb AI";
 
   private ComputerPlayer(String name) {
     super(name, COMPUTER);
   }
 
   public ComputerPlayer() {
-    this(generateName(Arrays.asList(NAMES.split(","))));
+    this(NAME);
   }
 
   @Override
-  public Game takeTurn(Map<TakeTurnKey, Object> params) {
-    return null;
+  public Game takeTurn(Map<TakeTurnKey, Object> params) throws MarkAlreadySetException {
+
+    Game game = getParam(params, GAME);
+    game.getBoard().getSquare(randomService.randomEmptySquareId(game)).setMark(this.getMark());
+
+    return game;
   }
 }

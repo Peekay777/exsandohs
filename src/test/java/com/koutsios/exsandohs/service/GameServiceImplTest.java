@@ -5,6 +5,7 @@ import static com.koutsios.exsandohs.model.StateType.STARTED;
 import static com.koutsios.exsandohs.util.GameServiceUtils.createBoard;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,13 +22,18 @@ import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.Board;
 import com.koutsios.exsandohs.model.Game;
+import com.koutsios.exsandohs.model.MarkType;
+import com.koutsios.exsandohs.model.Square;
 import com.koutsios.exsandohs.model.player.ComputerPlayer;
 import com.koutsios.exsandohs.model.player.HumanPlayer;
 import com.koutsios.exsandohs.model.player.Player;
 import com.koutsios.exsandohs.repository.GameRepository;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,9 +57,6 @@ public class GameServiceImplTest {
       return new GameServiceImpl();
     }
   }
-
-//  @Mock
-//  private ComputerPlayer computerPlayer;
 
   @MockBean
   private GameRepository gameRepository;
@@ -150,6 +153,7 @@ public class GameServiceImplTest {
     Player ex = HumanPlayer.builder()
         .name(playerName)
         .build();
+
     Player oh = new ComputerPlayer();
     Game game = Game.builder()
         .id(gameId)
@@ -164,7 +168,7 @@ public class GameServiceImplTest {
     board.getSquare("00").setMark(X);
     Game expected = Game.builder()
         .id(gameId)
-        .currentPlayerId(ex.getName())
+        .currentPlayerId(oh.getName())
         .playerEx(ex)
         .playerOh(oh)
         .state(STARTED)
@@ -177,6 +181,7 @@ public class GameServiceImplTest {
     Game actual = subject.takeTurn(gameId, playerName, squareId);
 
     assertEquals(X, actual.getBoard().getSquare("00").getMark());
+    assertEquals(expected.getCurrentPlayerId(), actual.getCurrentPlayerId());
     verify(gameRepository, times(1)).findById(anyString());
     verify(gameRepository, times(1)).save(any(Game.class));
   }

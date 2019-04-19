@@ -35,4 +35,15 @@ public class Game {
     }
     throw new PlayerNotFoundException(currentPlayerId);
   }
+
+  /**
+   * Change to the next Player.
+   */
+  public void nextPlayer() {
+    if (playerEx.getName().equals(this.currentPlayerId)) {
+      this.currentPlayerId = playerOh.getName();
+    } else if (playerOh.getName().equals(this.currentPlayerId)) {
+      this.currentPlayerId = playerEx.getName();
+    }
+  }
 }

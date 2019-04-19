@@ -8,10 +8,13 @@ import com.koutsios.exsandohs.model.Square;
 import com.koutsios.exsandohs.model.TakeTurnKey;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
 public class GameServiceUtils {
+
+  private static Random random = new Random();
 
   /**
    * Creates and empty board.
@@ -33,11 +36,11 @@ public class GameServiceUtils {
   }
 
   /**
-   * Get parameter
-   * @param map
-   * @param key
-   * @param <T>
-   * @return
+   * Get parameter.
+   * @param map Where the parameter is stored
+   * @param key Key to find
+   * @param <T> Type to return
+   * @return Value of parameter
    */
   @SuppressWarnings("unchecked")
   public static <T> T getParam(Map<TakeTurnKey, Object> map, TakeTurnKey key) {

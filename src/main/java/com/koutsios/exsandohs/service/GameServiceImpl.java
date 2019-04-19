@@ -16,7 +16,7 @@ import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.TakeTurnKey;
 import com.koutsios.exsandohs.model.player.Player;
 import com.koutsios.exsandohs.repository.GameRepository;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,18 +48,21 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public Game getGame(String gameId) throws GameNotFoundException {
+  public Game getGame(@NonNull String gameId) throws GameNotFoundException {
     return gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
   }
 
   @Override
-  public Game takeTurn(String gameId, String name, String squareId)
-      throws GameNotFoundException, PlayerNotFoundException, NotCurrentPlayerException,
-      MarkAlreadySetException {
+  public Game takeTurn(String gameId,
+                       String name,
+                       String squareId) throws GameNotFoundException, PlayerNotFoundException,
+      NotCurrentPlayerException, MarkAlreadySetException {
 
+    // Find Game
     Game game = gameRepository.findById(gameId)
         .orElseThrow(() -> new GameNotFoundException(gameId));
 
+    // Check its players turn and get current player
     Player player;
     if (game.getCurrentPlayerId().equals(name)) {
       player = game.findCurrentPlayer();
@@ -67,11 +70,18 @@ public class GameServiceImpl implements GameService {
       throw new NotCurrentPlayerException(name);
     }
 
-    Map<TakeTurnKey, Object> takeTurnMap = new HashMap<>();
+    // Take Turn
+    Map<TakeTurnKey, Object> takeTurnMap = new EnumMap<>(TakeTurnKey.class);
     takeTurnMap.put(GAME, game);
     takeTurnMap.put(SQUARE_ID, squareId);
-
     game = player.takeTurn(takeTurnMap);
+
+    // Check for win
+
+    // Check for Draw
+
+    // Next Player Turn
+    game.nextPlayer();
 
 
     return gameRepository.save(game);

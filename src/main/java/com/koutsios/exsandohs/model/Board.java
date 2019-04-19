@@ -1,6 +1,8 @@
 package com.koutsios.exsandohs.model;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,5 +17,13 @@ public class Board {
 
   public int getSize() {
     return gameBoard.size();
+  }
+
+  public List<String> findEmptySquareIds() {
+    return gameBoard.entrySet()
+        .stream()
+        .filter(entry -> entry.getValue().getMark() == null)
+        .map(Map.Entry::getKey)
+        .collect(Collectors.toList());
   }
 }
