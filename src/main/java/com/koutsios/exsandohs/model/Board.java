@@ -19,6 +19,10 @@ public class Board {
     return gameBoard.size();
   }
 
+  /**
+   * Finds all the empty squares and returns a list of square Ids.
+   * @return List of Square Ids
+   */
   public List<String> findEmptySquareIds() {
     return gameBoard.entrySet()
         .stream()

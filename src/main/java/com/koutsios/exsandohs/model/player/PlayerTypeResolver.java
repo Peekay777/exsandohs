@@ -25,8 +25,8 @@ public class PlayerTypeResolver extends TypeIdResolverBase {
       case "HUMAN":
         return context.getTypeFactory().constructType(new TypeReference<HumanPlayer>() {
         });
-      case "COMPUTER":
-        return context.getTypeFactory().constructType(new TypeReference<ComputerPlayer>() {
+      case "DUMB":
+        return context.getTypeFactory().constructType(new TypeReference<DumbComputerPlayer>() {
         });
       default:
         throw new IllegalArgumentException(id + " not known");

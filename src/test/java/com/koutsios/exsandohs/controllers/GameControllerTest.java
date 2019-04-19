@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.koutsios.exsandohs.dto.NewGameDto;
 import com.koutsios.exsandohs.exception.CreateGameException;
@@ -26,12 +25,11 @@ import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
-import com.koutsios.exsandohs.model.player.ComputerPlayer;
+import com.koutsios.exsandohs.model.player.DumbComputerPlayer;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.player.HumanPlayer;
 import com.koutsios.exsandohs.model.player.Player;
 import com.koutsios.exsandohs.service.GameServiceImpl;
-import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +47,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebMvcTest
 @MockBeans( {
-    @MockBean(ComputerPlayer.class)
+    @MockBean(DumbComputerPlayer.class)
 })
 public class GameControllerTest {
 
@@ -63,7 +61,7 @@ public class GameControllerTest {
   private GameServiceImpl gameService;
 
   @Mock
-  private ComputerPlayer computerPlayer;
+  private DumbComputerPlayer dumbComputerPlayer;
 
   @Before
   public void init() {
@@ -74,7 +72,7 @@ public class GameControllerTest {
     Player ex = HumanPlayer.builder()
         .name("One")
         .build();
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     NewGameDto newGameDto = NewGameDto.builder()
         .playerEx(ex)
         .playerOh(oh)
@@ -101,7 +99,7 @@ public class GameControllerTest {
     Player ex = HumanPlayer.builder()
         .name("One")
         .build();
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     NewGameDto newGameDto = NewGameDto.builder()
         .playerEx(ex)
         .playerOh(oh)

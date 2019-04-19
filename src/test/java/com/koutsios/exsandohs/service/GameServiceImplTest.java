@@ -22,18 +22,13 @@ import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.Board;
 import com.koutsios.exsandohs.model.Game;
-import com.koutsios.exsandohs.model.MarkType;
-import com.koutsios.exsandohs.model.Square;
-import com.koutsios.exsandohs.model.player.ComputerPlayer;
+import com.koutsios.exsandohs.model.player.DumbComputerPlayer;
 import com.koutsios.exsandohs.model.player.HumanPlayer;
 import com.koutsios.exsandohs.model.player.Player;
 import com.koutsios.exsandohs.repository.GameRepository;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @MockBeans( {
-    @MockBean(ComputerPlayer.class)
+    @MockBean(DumbComputerPlayer.class)
 })
 public class GameServiceImplTest {
 
@@ -74,7 +69,7 @@ public class GameServiceImplTest {
     Player ex = HumanPlayer.builder()
         .name("One")
         .build();
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     NewGameDto newGameDto = NewGameDto.builder()
         .playerEx(ex)
         .playerOh(oh)
@@ -94,7 +89,7 @@ public class GameServiceImplTest {
 
     assertThat(actual, instanceOf(Game.class));
     assertThat(actual.getPlayerEx(), instanceOf(HumanPlayer.class));
-    assertThat(actual.getPlayerOh(), instanceOf(ComputerPlayer.class));
+    assertThat(actual.getPlayerOh(), instanceOf(DumbComputerPlayer.class));
     assertEquals("One", actual.getCurrentPlayerId());
     assertEquals(STARTED, actual.getState());
     assertThat(actual.getBoard().getGameBoard(), instanceOf(Map.class));
@@ -104,7 +99,7 @@ public class GameServiceImplTest {
   public void createGame_givenPlayersWithSameName_whenCreateGame_thenThrowException()
       throws CreateGameException {
 
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     Player ex = HumanPlayer.builder()
         .name(oh.getName())
         .build();
@@ -154,7 +149,7 @@ public class GameServiceImplTest {
         .name(playerName)
         .build();
 
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     Game game = Game.builder()
         .id(gameId)
         .currentPlayerId(ex.getName())
@@ -208,7 +203,7 @@ public class GameServiceImplTest {
     Player ex = HumanPlayer.builder()
         .name("One")
         .build();
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     Game game = Game.builder()
         .id(gameId)
         .currentPlayerId(wrongPlayerName)
@@ -234,7 +229,7 @@ public class GameServiceImplTest {
     Player ex = HumanPlayer.builder()
         .name(playerName)
         .build();
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     Game game = Game.builder()
         .id(gameId)
         .currentPlayerId(playerName)
@@ -260,7 +255,7 @@ public class GameServiceImplTest {
     Player ex = HumanPlayer.builder()
         .name(playerName)
         .build();
-    Player oh = new ComputerPlayer();
+    Player oh = new DumbComputerPlayer();
     Board board = createBoard();
     board.getSquare("00").setMark(X);
     Game game = Game.builder()

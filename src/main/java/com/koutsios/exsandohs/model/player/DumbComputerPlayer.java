@@ -1,7 +1,7 @@
 package com.koutsios.exsandohs.model.player;
 
 import static com.koutsios.exsandohs.model.TakeTurnKey.GAME;
-import static com.koutsios.exsandohs.model.player.PlayerType.COMPUTER;
+import static com.koutsios.exsandohs.model.player.PlayerType.DUMB;
 import static com.koutsios.exsandohs.util.GameServiceUtils.getParam;
 
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
@@ -13,18 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComputerPlayer extends Player {
+public class DumbComputerPlayer extends Player {
 
   @Autowired
   private RandomService randomService;
 
   private static final String NAME = "Dumb AI";
 
-  private ComputerPlayer(String name) {
-    super(name, COMPUTER);
+  private DumbComputerPlayer(String name) {
+    super(name, DUMB);
   }
 
-  public ComputerPlayer() {
+  public DumbComputerPlayer() {
     this(NAME);
   }
 

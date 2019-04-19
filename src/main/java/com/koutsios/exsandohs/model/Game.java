@@ -1,5 +1,8 @@
 package com.koutsios.exsandohs.model;
 
+import static com.koutsios.exsandohs.model.MarkType.O;
+import static com.koutsios.exsandohs.model.MarkType.X;
+
 import com.koutsios.exsandohs.exception.PlayerNotFoundException;
 import com.koutsios.exsandohs.model.player.Player;
 import lombok.AllArgsConstructor;
@@ -21,8 +24,23 @@ public class Game {
   private Player playerOh;
   private Board board;
 
+  public void setPlayerEx(Player playerEx) {
+    this.playerEx = playerEx;
+    if (this.playerEx != null) {
+      this.playerEx.setMark(X);
+    }
+  }
+
+  public void setPlayerOh(Player playerOh) {
+    this.playerOh = playerOh;
+    if (this.playerOh != null) {
+      this.playerOh.setMark(O);
+    }
+  }
+
   /**
    * Gets the player with the required name.
+   *
    * @return Player required
    * @throws PlayerNotFoundException Current Player is not playing
    */

@@ -12,7 +12,6 @@ import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.model.Board;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.TakeTurnKey;
-import com.koutsios.exsandohs.service.GameServiceImpl;
 import com.koutsios.exsandohs.service.RandomService;
 import java.util.EnumMap;
 import java.util.List;
@@ -36,8 +35,8 @@ public class ComputerPlayerTest {
   @TestConfiguration
   static class GameServiceImplTestConfiguration {
     @Bean
-    public ComputerPlayer computerPlayer() {
-      return new ComputerPlayer();
+    public DumbComputerPlayer computerPlayer() {
+      return new DumbComputerPlayer();
     }
   }
 
