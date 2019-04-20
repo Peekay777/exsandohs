@@ -5,7 +5,7 @@ import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
-import com.koutsios.exsandohs.exception.PlayerNotFoundException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,13 @@ public class GameController {
     return gameService.getGame(gameId);
   }
 
-  @PutMapping({"/{gameId}/{playerName}/{squareId}", "/{gameId}/{playerName}"})
-  public Game takeTurn(@PathVariable String gameId,
+  @PutMapping( {"/{gameId}/{playerName}/{squareId}", "/{gameId}/{playerName}"})
+  public Game nextTurn(@PathVariable String gameId,
                        @PathVariable("playerName") String name,
                        @PathVariable(required = false) String squareId)
-      throws GameNotFoundException, NotCurrentPlayerException, PlayerNotFoundException,
-      MarkAlreadySetException {
+      throws GameNotFoundException, NotCurrentPlayerException, MarkAlreadySetException, SquareNotFound {
 
-    return gameService.takeTurn(gameId, name, squareId);
+    return gameService.nextTurn(gameId, name, squareId);
   }
 
 }

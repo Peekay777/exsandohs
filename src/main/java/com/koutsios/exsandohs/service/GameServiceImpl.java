@@ -1,5 +1,6 @@
 package com.koutsios.exsandohs.service;
 
+import static com.koutsios.exsandohs.model.StateType.IN_PROGRESS;
 import static com.koutsios.exsandohs.model.StateType.STARTED;
 import static com.koutsios.exsandohs.model.TakeTurnKey.GAME;
 import static com.koutsios.exsandohs.model.TakeTurnKey.SQUARE_ID;
@@ -11,7 +12,7 @@ import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
-import com.koutsios.exsandohs.exception.PlayerNotFoundException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.TakeTurnKey;
 import com.koutsios.exsandohs.model.player.Player;
@@ -53,10 +54,10 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public Game takeTurn(String gameId,
+  public Game nextTurn(String gameId,
                        String name,
-                       String squareId) throws GameNotFoundException, PlayerNotFoundException,
-      NotCurrentPlayerException, MarkAlreadySetException {
+                       String squareId) throws GameNotFoundException, NotCurrentPlayerException,
+      MarkAlreadySetException, SquareNotFound {
 
     // Find Game
     Game game = gameRepository.findById(gameId)
@@ -76,13 +77,18 @@ public class GameServiceImpl implements GameService {
     takeTurnMap.put(SQUARE_ID, squareId);
     game = player.takeTurn(takeTurnMap);
 
-    // Check for win
 
-    // Check for Draw
+    if (game.getBoard().checkForWinner(player.getMark())) {
+      // Check for win
 
-    // Next Player Turn
-    game.nextPlayer();
+    } else if (game.getBoard().checkForDraw()) {
+      // Check for Draw
 
+    } else {
+      // Next Player Turn and change state to in progress
+      game.nextPlayer();
+      game.changeState(IN_PROGRESS);
+    }
 
     return gameRepository.save(game);
   }

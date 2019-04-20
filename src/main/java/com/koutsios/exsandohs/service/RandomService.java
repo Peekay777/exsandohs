@@ -18,6 +18,7 @@ public class RandomService {
 
   /**
    * Return random empty square id.
+   *
    * @param game Current game object
    * @return Square id
    */

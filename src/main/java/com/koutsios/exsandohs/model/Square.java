@@ -17,6 +17,7 @@ public class Square {
 
   /**
    * Sets the mark.
+   *
    * @param mark Mark Type to set
    * @throws MarkAlreadySetException Once Mark is set can not change value
    */

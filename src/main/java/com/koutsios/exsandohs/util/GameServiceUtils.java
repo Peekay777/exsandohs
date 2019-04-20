@@ -9,6 +9,8 @@ import com.koutsios.exsandohs.model.TakeTurnKey;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -23,9 +25,9 @@ public class GameServiceUtils {
    */
   public static Board createBoard() {
 
-    Map<String, Square> board = new HashMap<>(9);
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
+    Map<String, Square> board = new TreeMap<>();
+    for (int i = 1; i < 4; i++) {
+      for (int j = 1; j < 4; j++) {
         String ivalue = String.valueOf(i);
         String jvalue = String.valueOf(j);
         String key = ivalue + jvalue;
@@ -37,6 +39,7 @@ public class GameServiceUtils {
 
   /**
    * Get parameter.
+   *
    * @param map Where the parameter is stored
    * @param key Key to find
    * @param <T> Type to return

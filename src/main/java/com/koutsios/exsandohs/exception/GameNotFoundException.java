@@ -14,6 +14,6 @@ public class GameNotFoundException extends Exception {
 
   public GameNotFoundException(String gameId) {
     super(MessageFormat.format(MESSAGE_PATTERN, gameId));
-    log.error(MessageFormat.format(MESSAGE_PATTERN, gameId),this);
+    log.error(MessageFormat.format(MESSAGE_PATTERN, gameId), this);
   }
 }

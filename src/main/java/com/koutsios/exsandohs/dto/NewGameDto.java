@@ -17,16 +17,6 @@ public class NewGameDto {
   @NonNull
   private Player playerOh;
 
-  public void setPlayerEx(Player playerEx) {
-    this.playerEx = playerEx;
-    this.playerEx.setMark(X);
-  }
-
-  public void setPlayerOh(Player playerOh) {
-    this.playerOh = playerOh;
-    this.playerOh.setMark(O);
-  }
-
   /**
    * Generate a new Game.
    *
@@ -39,6 +29,16 @@ public class NewGameDto {
     this.playerOh = playerOh;
 
     this.playerEx.setMark(X);
+    this.playerOh.setMark(O);
+  }
+
+  public void setPlayerEx(Player playerEx) {
+    this.playerEx = playerEx;
+    this.playerEx.setMark(X);
+  }
+
+  public void setPlayerOh(Player playerOh) {
+    this.playerOh = playerOh;
     this.playerOh.setMark(O);
   }
 }

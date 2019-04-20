@@ -47,6 +47,6 @@ public class RandomServiceTest {
 
     String actual = subject.randomEmptySquareId(game);
 
-    assertEquals("00", actual);
+    assertEquals("11", actual);
   }
 }

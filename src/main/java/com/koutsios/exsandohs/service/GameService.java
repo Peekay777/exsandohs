@@ -5,7 +5,7 @@ import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
-import com.koutsios.exsandohs.exception.PlayerNotFoundException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Game;
 
 public interface GameService {
@@ -14,6 +14,6 @@ public interface GameService {
 
   Game getGame(String gameId) throws GameNotFoundException;
 
-  Game takeTurn(String gameId, String name, String squareId) throws GameNotFoundException,
-      PlayerNotFoundException, NotCurrentPlayerException, MarkAlreadySetException;
+  Game nextTurn(String gameId, String name, String squareId) throws GameNotFoundException,
+      NotCurrentPlayerException, MarkAlreadySetException, SquareNotFound;
 }

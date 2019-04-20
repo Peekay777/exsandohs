@@ -6,6 +6,7 @@ import static com.koutsios.exsandohs.model.player.PlayerType.HUMAN;
 import static com.koutsios.exsandohs.util.GameServiceUtils.getParam;
 
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.TakeTurnKey;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class HumanPlayer extends Player {
   }
 
   @Override
-  public Game takeTurn(Map<TakeTurnKey, Object> params) throws MarkAlreadySetException {
+  public Game takeTurn(Map<TakeTurnKey, Object> params) throws MarkAlreadySetException, SquareNotFound {
 
     Game game = getParam(params, GAME);
     String squareId = getParam(params, SQUARE_ID);

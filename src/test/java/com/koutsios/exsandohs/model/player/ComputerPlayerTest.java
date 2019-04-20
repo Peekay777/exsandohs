@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Board;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.TakeTurnKey;
@@ -47,7 +48,7 @@ public class ComputerPlayerTest {
   private RandomService randomService;
 
   @Test
-  public void takeTurn_givenEmptyBoard_whenTakingComputerPlayerTurn_thenAssignMarkToOneSquare() throws MarkAlreadySetException {
+  public void takeTurn_givenEmptyBoard_whenTakingComputerPlayerTurn_thenAssignMarkToOneSquare() throws MarkAlreadySetException, SquareNotFound {
     Player player = subject;
     player.setMark(X);
     Game game = Game.builder()
@@ -64,6 +65,6 @@ public class ComputerPlayerTest {
     final Board board = game.getBoard();
     final List<String> emptySquareIds = board.findEmptySquareIds();
     assertEquals(8, emptySquareIds.size());
-    assertEquals(X, board.getSquare("00").getMark());
+    assertEquals(X, board.getSquare("11").getMark());
   }
 }

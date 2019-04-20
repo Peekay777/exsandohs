@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.MarkType;
 import com.koutsios.exsandohs.model.TakeTurnKey;
@@ -30,5 +31,5 @@ public abstract class Player {
     this.playerType = playerType;
   }
 
-  public abstract Game takeTurn(Map<TakeTurnKey, Object> params) throws MarkAlreadySetException;
+  public abstract Game takeTurn(Map<TakeTurnKey, Object> params) throws MarkAlreadySetException, SquareNotFound;
 }

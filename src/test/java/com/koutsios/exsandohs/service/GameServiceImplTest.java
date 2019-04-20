@@ -1,11 +1,10 @@
 package com.koutsios.exsandohs.service;
 
-import static com.koutsios.exsandohs.model.MarkType.*;
+import static com.koutsios.exsandohs.model.MarkType.X;
 import static com.koutsios.exsandohs.model.StateType.STARTED;
 import static com.koutsios.exsandohs.util.GameServiceUtils.createBoard;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,7 +18,7 @@ import com.koutsios.exsandohs.exception.CreateGameException;
 import com.koutsios.exsandohs.exception.GameNotFoundException;
 import com.koutsios.exsandohs.exception.MarkAlreadySetException;
 import com.koutsios.exsandohs.exception.NotCurrentPlayerException;
-import com.koutsios.exsandohs.exception.PlayerNotFoundException;
+import com.koutsios.exsandohs.exception.SquareNotFound;
 import com.koutsios.exsandohs.model.Board;
 import com.koutsios.exsandohs.model.Game;
 import com.koutsios.exsandohs.model.player.DumbComputerPlayer;
@@ -140,11 +139,11 @@ public class GameServiceImplTest {
   }
 
   @Test
-  public void takeTurn_whenCorrectPlayerTurn_thenReturnGameWithCorrectState() throws GameNotFoundException, NotCurrentPlayerException, PlayerNotFoundException, MarkAlreadySetException {
+  public void takeTurn_whenCorrectPlayerTurn_thenReturnGameWithCorrectState() throws GameNotFoundException, NotCurrentPlayerException, MarkAlreadySetException, SquareNotFound {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
     String playerName = "One";
-    String squareId = "00";
+    String squareId = "11";
     Player ex = HumanPlayer.builder()
         .name(playerName)
         .build();
@@ -160,7 +159,7 @@ public class GameServiceImplTest {
         .build();
 
     Board board = createBoard();
-    board.getSquare("00").setMark(X);
+    board.getSquare("11").setMark(X);
     Game expected = Game.builder()
         .id(gameId)
         .currentPlayerId(oh.getName())
@@ -173,55 +172,29 @@ public class GameServiceImplTest {
     when(gameRepository.findById(anyString())).thenReturn(Optional.of(game));
     when(gameRepository.save(any(Game.class))).thenReturn(expected);
 
-    Game actual = subject.takeTurn(gameId, playerName, squareId);
+    Game actual = subject.nextTurn(gameId, playerName, squareId);
 
-    assertEquals(X, actual.getBoard().getSquare("00").getMark());
+    assertEquals(X, actual.getBoard().getSquare("11").getMark());
     assertEquals(expected.getCurrentPlayerId(), actual.getCurrentPlayerId());
     verify(gameRepository, times(1)).findById(anyString());
     verify(gameRepository, times(1)).save(any(Game.class));
   }
 
   @Test(expected = GameNotFoundException.class)
-  public void takeTurn_givenNonExistingGameId_whenCallingTakeTurn_thenThrowGameNotFoundException() throws GameNotFoundException, MarkAlreadySetException, NotCurrentPlayerException, PlayerNotFoundException {
+  public void takeTurn_givenNonExistingGameId_whenCallingTakeTurn_thenThrowGameNotFoundException() throws GameNotFoundException, MarkAlreadySetException, NotCurrentPlayerException, SquareNotFound {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
     String playerName = "One";
     String squareId = "00";
     when(gameRepository.findById(anyString())).thenReturn(Optional.empty());
 
-    subject.takeTurn(gameId, playerName, squareId);
+    subject.nextTurn(gameId, playerName, squareId);
 
     fail("GameNotFoundException not thrown");
   }
 
-  @Test(expected = PlayerNotFoundException.class)
-  public void takeTurn_givenNoPlayersWithCurrentPlayerId_whenCallingTakeTurn_thenThrowPlayerNotFoundException() throws GameNotFoundException, MarkAlreadySetException, NotCurrentPlayerException, PlayerNotFoundException {
-
-    String gameId = "00000000-0000-0000-0000-000000000000";
-    String wrongPlayerName = "DoesntExist";
-    String squareId = "00";
-    Player ex = HumanPlayer.builder()
-        .name("One")
-        .build();
-    Player oh = new DumbComputerPlayer();
-    Game game = Game.builder()
-        .id(gameId)
-        .currentPlayerId(wrongPlayerName)
-        .playerEx(ex)
-        .playerOh(oh)
-        .state(STARTED)
-        .board(createBoard())
-        .build();
-
-    when(gameRepository.findById(anyString())).thenReturn(Optional.of(game));
-
-    subject.takeTurn(gameId, wrongPlayerName, squareId);
-
-    fail("PlayerNotFoundException not thrown");
-  }
-
   @Test(expected = NotCurrentPlayerException.class)
-  public void takeTurn_givenNotCurrentPlayer_whenCallingTakeTurn_thenThrowNotCurrentPlayerException() throws GameNotFoundException, MarkAlreadySetException, NotCurrentPlayerException, PlayerNotFoundException {
+  public void takeTurn_givenNotCurrentPlayer_whenCallingTakeTurn_thenThrowNotCurrentPlayerException() throws GameNotFoundException, MarkAlreadySetException, NotCurrentPlayerException, SquareNotFound {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
     String playerName = "One";
@@ -241,23 +214,23 @@ public class GameServiceImplTest {
 
     when(gameRepository.findById(anyString())).thenReturn(Optional.of(game));
 
-    subject.takeTurn(gameId, "NotThisPlayer", squareId);
+    subject.nextTurn(gameId, "NotThisPlayer", squareId);
 
     fail("NotCurrentPlayerException not thrown");
   }
 
   @Test(expected = MarkAlreadySetException.class)
-  public void takeTurn_whenCorrectPlayerTurn_thenThrowMarkAlreadySetException() throws GameNotFoundException, NotCurrentPlayerException, PlayerNotFoundException, MarkAlreadySetException {
+  public void takeTurn_whenCorrectPlayerTurn_thenThrowMarkAlreadySetException() throws GameNotFoundException, NotCurrentPlayerException, MarkAlreadySetException, SquareNotFound {
 
     String gameId = "00000000-0000-0000-0000-000000000000";
     String playerName = "One";
-    String squareId = "00";
+    String squareId = "11";
     Player ex = HumanPlayer.builder()
         .name(playerName)
         .build();
     Player oh = new DumbComputerPlayer();
     Board board = createBoard();
-    board.getSquare("00").setMark(X);
+    board.getSquare("11").setMark(X);
     Game game = Game.builder()
         .id(gameId)
         .currentPlayerId(ex.getName())
@@ -268,7 +241,7 @@ public class GameServiceImplTest {
         .build();
     when(gameRepository.findById(anyString())).thenReturn(Optional.of(game));
 
-    subject.takeTurn(gameId, playerName, squareId);
+    subject.nextTurn(gameId, playerName, squareId);
 
     fail("MarkAlreadySetException not thrown");;
   }
